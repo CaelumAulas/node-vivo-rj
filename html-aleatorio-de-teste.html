@@ -1,0 +1,48 @@
+<!-- Compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">Livraria</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li>
+                <a href="home.html">Home</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <ul class="collection">
+        <li class="collection-item">
+            Carregando...
+        </li>
+    </ul>
+</div>
+
+<!-- API com os dados -->
+<!-- FrontEnd independente -->
+
+<!-- 1- Cria o arquivo html-aleatorio-de-teste.html na raíz do projeto -->
+    <!-- HTML ta aqui: http://dontpad.com/links-telefonica -->
+<!-- 2 - Escreve esse código a mais no final do arquivo -->
+<script src="./meuarquivo.js"></script>
+<script>
+fetch('http://localhost:3000/produtos', {
+	headers: {
+		'Accept': 'application/json'
+	}
+})
+.then(function(respostaDoServidor){
+	console.log(respostaDoServidor)
+	document.querySelector('.collection').innerHTML = ''
+	return respostaDoServidor.json()
+})
+.then(function(respostaDoServidorEmObjeto) {
+	for(produto of respostaDoServidorEmObjeto) {
+		document.querySelector('.collection').innerHTML += `
+			<li class="collection-item">${produto.titulo}</li>
+		`
+	}
+})
+</script>

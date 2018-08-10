@@ -50,28 +50,39 @@ module.exports = function(app) {
         produtosDAO.pegaUmPorId(request.params.id, blocoPraExecutarDepois)
     })
 
-    app.get('/produtos', function (request, response) {
-
+    app.get('/produtos', function (request, response, next) {
         // Design Pattern
         const connectionFactory = require('../infra/connectionFactory')
-
-        // SQL Server
-        // connectionFactory()
-        // .then((connection) => {  
-        //     connection.query('SELECT * FROM persons', (err, result) => {
-        //         console.log(result)
-        //         response.send(result.recordset)
-        //     })
-        // })
         
         // MySQL
         connectionFactory()
         .then(function (connection) {
             connection.query('SELECT * FROM produtos', (err, result) => {
-                response.render('produtos/lista.ejs', {
-                    livros: result
+                if(err) {
+                    throw new Error('Aconteceu um erro em produtos')
+                }
+
+                // Baixar o Postman (Clicar em "Usar no chrome")
+                // Fazer login nele
+                // E testar o res.format
+                // http://dontpad.com/links-telefonica
+                response.format({
+                    html: function() {
+                        response.render('produtos/lista.ejs', {
+                            livros: result
+                        })
+                    },
+                    json: function() {
+                        response.json(result)
+                    }
                 })
+
+                // response.json(result)
+                
             })
+        })
+        .catch(() => {
+            return next('Aconteceu um erro em produtos')
         })
     })
 }
